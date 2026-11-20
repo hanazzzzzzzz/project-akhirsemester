@@ -1,92 +1,129 @@
 # SensorCraft - Smart Environment & Motion Activity Logger 🚀
 
-**SensorCraft** adalah aplikasi Android berbasis **Kotlin Jetpack Compose** yang dirancang untuk memantau, menganalisis, dan mencatat data sensor fisik perangkat secara *real-time*. Aplikasi ini menerapkan arsitektur **MVVM (Model-View-ViewModel)** serta menggunakan **Database SQLite** untuk penyimpanan data snapshot sensor secara lokal.
+**SensorCraft** merupakan aplikasi Android yang dibuat menggunakan Kotlin dan Jetpack Compose untuk membaca serta memantau data sensor yang ada di perangkat secara langsung. Aplikasi ini bisa digunakan untuk melihat kondisi lingkungan sekitar, pergerakan perangkat, dan arah kompas.
+
+Selain menampilkan data sensor, SensorCraft juga memiliki fitur untuk menyimpan hasil pembacaan sensor ke database SQLite, sehingga data yang sudah dicatat bisa dilihat kembali kapan saja.
+
+Aplikasi ini dibuat dengan menggunakan arsitektur MVVM agar kode program lebih terstruktur dan mudah dikembangkan.
 
 ---
 
-## 📱 Fitur-Fitur Utama Aplikasi
+## 📱 Fitur Aplikasi
 
-1. **Real-Time Sensor Dashboard**:
-   - Monitoring data sensor Motion (Accelerometer), Environment (Light Sensor), dan Position (Magnetometer/Compass) secara langsung.
-   - Status indikator pergerakan (*Stationary*, *Walking*, *Active Shake*) dan perhitungan sudut Kemiringan (*Pitch & Roll*).
-   - Pengukur tingkat pencahayaan (Lux) beserta kategori kondisi ruangan dan rekomendasi kenyamanan mata.
-   - Pembacaan kompas 360° lengkap dengan 8 arah mata angin (N, NE, E, SE, S, SW, W, NW) dan kekuatan medan magnet (µT).
+### 1. Dashboard Sensor Real-Time
+Pada halaman Dashboard, pengguna dapat melihat data sensor secara langsung, meliputi:
+- **Accelerometer** untuk membaca pergerakan perangkat.
+- **Light Sensor** untuk mengetahui tingkat pencahayaan sekitar dalam satuan Lux.
+- **Magnetometer** untuk mengetahui arah dan kekuatan medan magnet.
 
-2. **Penyimpanan Snapshot Data ke Database SQLite**:
-   - Tombol cepat **"Log to SQLite"** untuk menyimpan status sensor saat ini.
-   - Input judul log, tag kategori (*Desk Work*, *Outdoor Walk*, *Gym / Active*, *Night Reading*, *Travel*), serta catatan/observasi.
+Dashboard juga menampilkan status aktivitas perangkat seperti Stationary, Walking, dan Active Shake, serta sudut kemiringan perangkat berupa Pitch dan Roll.
 
-3. **Manajemen & Analisis Riwayat (History Logs)**:
-   - Menampilkan seluruh catatan snapshot sensor yang tersimpan di database SQLite.
-   - Pencarian cerdas (*Search bar*) berdasarkan judul, catatan, atau kategori sensor.
-   - Filter data berdasarkan Tag kategori.
-   - Ringkasan statistik otomatis (Total logs, Rata-rata Lux, Puncak Akselerasi).
-   - Fitur menghapus log individual maupun mengosongkan seluruh isi database SQLite.
+### 2. Menyimpan Data Sensor
+Pengguna dapat menyimpan hasil pembacaan sensor menggunakan tombol **Log to SQLite**. Sebelum menyimpan data, pengguna bisa mengisi beberapa informasi, seperti:
+- Judul catatan.
+- Kategori aktivitas.
+- Catatan tambahan.
 
-4. **Alat Interaktif Sensor (Interactive Sensor Tools)**:
-   - **Waterpass Digital (Spirit Level)**: Visualisasi gelembung air bergerak pada target lingkaran menggunakan *Canvas* Compose berbasis data Accelerometer.
-   - **Kompas 360° Interaktif**: Dial kompas digital dengan jarum petunjuk arah utara (Merah) yang berputar halus berbasis Magnetometer.
-   - **Lux Evaluator Bar**: Gauge visualisasi intensitas cahaya berbasis pencahayaan lingkungan.
+Data yang disimpan akan masuk ke database SQLite dan bisa dilihat kembali melalui halaman History.
 
-5. **Halaman Info & Status Hardware (About App)**:
-   - Rincian teknologi, arsitektur MVVM, dan status ketersediaan sensor hardware pada perangkat.
+### 3. History dan Pengelolaan Data
+Halaman History digunakan untuk melihat data sensor yang sudah pernah disimpan. Beberapa fitur yang tersedia antara lain:
+- Menampilkan seluruh data log.
+- Mencari data berdasarkan judul, catatan, atau kategori.
+- Memfilter data berdasarkan tag.
+- Menampilkan statistik jumlah log, rata-rata Lux, dan akselerasi tertinggi.
+- Menghapus data tertentu atau menghapus seluruh data log.
 
----
+### 4. Tools Sensor Interaktif
+Aplikasi juga menyediakan beberapa alat yang menggunakan data sensor perangkat secara langsung.
 
-## 🛠️ Teknologi & Arsitektur
+- **Digital Waterpass (Spirit Level)**: Menampilkan posisi kemiringan perangkat melalui visualisasi gelembung pada layar.
+- **Kompas Digital**: Menampilkan arah mata angin dengan dial 360° yang bergerak mengikuti perubahan arah perangkat.
+- **Lux Meter**: Menampilkan tingkat pencahayaan sekitar dalam bentuk indikator visual.
 
-- **Bahasa Pemrograman**: Kotlin (Modern & Idiomatic)
-- **UI Framework**: Jetpack Compose dengan Material 3 Design
-- **Arsitektur**: MVVM (Model - View - ViewModel)
-  - **Model**: `SensorLog`, `SensorDbHelper` (SQLite Database)
-  - **View**: `DashboardScreen`, `HistoryScreen`, `ToolsScreen`, `AboutScreen`, `SaveSnapshotDialog`, `CompassDialView`, `SpiritLevelView`
-  - **ViewModel**: `SensorViewModel` mengelola `StateFlow<SensorUiState>`
-- **Database**: SQLite (`android.database.sqlite.SQLiteOpenHelper`)
-- **Sensors API**: Android `SensorManager`, `SensorEventListener`
-- **Asynchronous & Reactive**: Kotlin Coroutines & StateFlow
-- **Navigation**: Jetpack Compose Navigation (`NavHost`)
+### 5. About App
+Halaman About berisi informasi mengenai aplikasi, teknologi yang digunakan, arsitektur program, serta status sensor yang tersedia pada perangkat.
 
 ---
 
-## 📡 Sensor yang Digunakan & Fungsinya
+## 🛠️ Teknologi yang Digunakan
 
-Aplikasi ini mengintegrasikan **3 Sensor Hardware** dari 3 kategori berbeda:
+Dalam pembuatan aplikasi SensorCraft, beberapa teknologi yang digunakan yaitu:
 
-| Kategori Sensor | Tipe Sensor | Fungsi & Penerapan dalam Aplikasi |
-| :--- | :--- | :--- |
-| **Motion Sensor** | `Sensor.TYPE_ACCELEROMETER` | Mengukur percepatan 3-aksis (X, Y, Z), menghitung total magnitudo akselerasi (m/s²), menentukan status aktivitas (*Stationary*, *Walking*, *Active Shake*), serta mengukur sudut kemiringan *Pitch* & *Roll* untuk alat Waterpass Digital (*Spirit Level*). |
-| **Environment Sensor** | `Sensor.TYPE_LIGHT` | Mengukur tingkat intensitas pencahayaan lingkungan sekitar dalam satuan Lux (lx), mengklasifikasikan kondisi cahaya (Gelap, Dim, Kamar, Kantor Terang, Daylight), serta memberikan rekomendasi kesehatan mata. |
-| **Position Sensor** | `Sensor.TYPE_MAGNETIC_FIELD` | Mengukur kekuatan medan magnet (µT) dan dikombinasikan dengan Accelerometer untuk menghitung derajat sudut kompas azimuth (0° - 360°) dan penentuan 8 arah mata angin utama. |
+- **Kotlin** sebagai bahasa pemrograman.
+- **Jetpack Compose** untuk membuat tampilan aplikasi.
+- **Material 3** sebagai desain antarmuka.
+- **MVVM** untuk mengatur struktur aplikasi.
+- **SQLite** untuk menyimpan data sensor secara lokal.
+- **SensorManager** untuk mengakses sensor perangkat Android.
+- **Coroutines dan StateFlow** untuk mengelola data secara asynchronous dan real-time.
+- **Jetpack Compose Navigation** untuk berpindah antarhalaman.
+
+### Struktur Arsitektur
+
+Aplikasi menggunakan arsitektur MVVM yang terdiri dari tiga bagian utama:
+
+- **Model**: Berisi data sensor dan pengelolaan database, seperti `SensorLog` dan `SensorDbHelper`.
+- **View**: Bagian tampilan aplikasi, seperti Dashboard, History, Tools, About, dan beberapa komponen visual sensor.
+- **ViewModel**: Mengatur data yang ditampilkan pada aplikasi dan menghubungkan Model dengan View melalui `SensorViewModel`.
 
 ---
 
-## 🎨 Tampilan Aplikasi (UI Screens)
+## 📡 Sensor yang Digunakan
 
-Aplikasi memiliki 4 Navigasi Utama:
-1. **Dashboard Tab**: Tampilan kartu monitor data sensor *real-time* & Floating Action Button simpan ke SQLite.
-2. **History Tab**: Daftar log SQLite, ringkasan statistik, filter chip tag, dan bilah pencarian.
-3. **Tools Tab**: Tampilan visualisasi Waterpass (Spirit Level), Kompas Dial 360°, dan Lux Meter.
-4. **About Tab**: Informasi arsitektur MVVM, SQLite DB, dan daftar checklist kelengkapan proyek.
+SensorCraft menggunakan tiga jenis sensor utama yang tersedia pada perangkat Android.
+
+| Sensor | Fungsi |
+|---|---|
+| Accelerometer | Mengukur percepatan pada sumbu X, Y, dan Z. Digunakan untuk mendeteksi gerakan, menghitung magnitudo akselerasi, serta mengetahui sudut kemiringan perangkat. |
+| Light Sensor | Mengukur intensitas cahaya di sekitar perangkat dalam satuan Lux. Data digunakan untuk menentukan kondisi pencahayaan dan memberikan rekomendasi penggunaan. |
+| Magnetometer | Mengukur kekuatan medan magnet. Data sensor ini digunakan bersama Accelerometer untuk menentukan arah kompas. |
+
+---
+
+## 🎨 Tampilan Aplikasi
+
+SensorCraft memiliki empat halaman utama yang dapat diakses melalui navigasi aplikasi.
+
+1. **Dashboard**  
+   Menampilkan data sensor secara real-time, status pergerakan, tingkat cahaya, arah kompas, dan tombol untuk menyimpan data.
+
+2. **History**  
+   Menampilkan data sensor yang sudah tersimpan, dilengkapi fitur pencarian, filter kategori, statistik, dan penghapusan data.
+
+3. **Tools**  
+   Berisi alat interaktif seperti Digital Waterpass, Kompas Digital, dan Lux Meter.
+
+4. **About**  
+   Berisi informasi mengenai aplikasi, teknologi yang digunakan, struktur arsitektur, serta ketersediaan sensor perangkat.
 
 ---
 
 ## 🚀 Cara Menjalankan Aplikasi
 
-### Persyaratan Sistem:
-- **Android Studio**: Ladybug / 2024.1+
-- **JDK**: Version 11 atau 17
-- **Min SDK**: Android 8.0 (API Level 26)
-- **Target SDK**: Android 16 (API Level 36)
+### Persyaratan
+- Android Studio Ladybug atau versi terbaru.
+- JDK 11 atau 17.
+- Minimum Android 8.0 (API 26).
+- Target SDK Android 16 (API 36).
 
-### Langkah-Langkah:
-1. **Clone / Download Repository**:
+### Langkah Instalasi
+
+1. Download atau clone repository proyek SensorCraft.
    ```bash
    git clone <LINK_REPOSITORY_GITHUB_ANDA>
    ```
-2. **Buka Proyek di Android Studio**:
-   - Buka Android Studio -> `File` -> `Open` -> Pilih folder proyek `SensorCraft`.
-3. **Sync Gradle Project**:
-   - Tunggu proses Gradle Build & Dependencies Sync hingga selesai.
-4. **Jalankan Proyek**:
-   - Hubungkan HP Android asli via USB Debugging (Disarankan agar dapat mencoba sensor fisik) atau gunakan Android Emulator (Virtual Sensors di Extended Controls).
-   - Tekan tombol **Run 'app'** (`Shift + F10`).
+
+2. Buka Android Studio, lalu pilih **File → Open**.
+
+3. Pilih folder proyek SensorCraft yang sudah di-download.
+
+4. Tunggu proses Gradle Sync sampai selesai.
+
+5. Hubungkan perangkat Android menggunakan USB Debugging atau jalankan melalui emulator yang mendukung virtual sensor.
+
+6. Klik tombol **Run** atau tekan `Shift + F10` untuk menjalankan aplikasi.
+
+---
+
+SensorCraft dibuat sebagai proyek pembelajaran Android yang menggabungkan penggunaan sensor perangkat, tampilan data secara real-time, penyimpanan database lokal, dan pengembangan aplikasi menggunakan Kotlin serta Jetpack Compose.
